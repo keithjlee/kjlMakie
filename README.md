@@ -4,7 +4,6 @@ Makie theme for light/dark mode, as well as some commonly used utility functions
 
 The two available themes are `kjl_light` and `kjl_dark`.
 
-3D plots are set up without spines, axes, or labels. When required, use `labelize!(axis)` to toggle them on/off.
 
 Background colours are all set to transparent to allow for placement in non-white/non-black scenarios. `GLMakie` requires a non-transparent background colour for the figure to render properly. Make sure to use `Figure(backgroundcolor = :color)` if working in `GLMakie`.
 
@@ -58,7 +57,7 @@ changefont!(myaxis, "Times New Roman")
 
 `gridtoggle!(axis)` turns gridlines on/off.
 
-# Walkthrough
+<!-- # Walkthrough
 Starting with a figure definition:
 ```
 using CairoMakie, kjlMakie
@@ -172,4 +171,4 @@ record(fig, "figures/anim.gif", iterator; framerate = 20) do _
     ax2.azimuth[] += inc
 end
 ```
-![](examples/walkthrough/anim.gif)
+![](examples/walkthrough/anim.gif) -->
