@@ -111,3 +111,27 @@ function gridtoggle!(axis::Axis3)
     axis.ygridvisible = !axis.ygridvisible[]
     axis.zgridvisible = !axis.zgridvisible[]
 end
+
+function simplifyspines!(axis::Axis3)
+
+    if axis.xspinecolor_2 != :transparent
+        axis.xspinecolor_2 = :transparent
+        axis.xspinecolor_3 = :transparent
+
+        axis.yspinecolor_2 = :transparent
+        axis.yspinecolor_3 = :transparent
+
+        axis.zspinecolor_2 = :transparent
+        axis.zspinecolor_3 = :transparent
+    else
+        axis.xspinecolor_2 = axis.xspinecolor_1[]
+        axis.xspinecolor_3 = axis.xspinecolor_1[]
+
+        axis.yspinecolor_2 = axis.xspinecolor_1[]
+        axis.yspinecolor_3 = axis.xspinecolor_1[]
+
+        axis.zspinecolor_2 = axis.xspinecolor_1[]
+        axis.zspinecolor_3 = axis.xspinecolor_1[]
+    end
+    
+end

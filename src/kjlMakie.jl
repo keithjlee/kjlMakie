@@ -27,6 +27,7 @@ export labelscale!
 export changefont!
 export resetlabelscale!
 export gridtoggle!
+export simplifyspines!
 
 end # module
  
