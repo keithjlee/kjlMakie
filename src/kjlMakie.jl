@@ -18,16 +18,17 @@ export red
 export orange
 export gray1
 export gray2
-export pastel
+export pastelß
 
 include("functions.jl")
 export discretize
 export labelize!
-export labelscale!
+export labelscale!ßß
 export changefont!
 export resetlabelscale!
 export gridtoggle!
 export simplifyspines!
+export linkaxes!
 
 end # module
  

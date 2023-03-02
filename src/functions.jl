@@ -134,4 +134,20 @@ function simplifyspines!(axis::Axis3)
         axis.zspinecolor_3 = axis.xspinecolor_1[]
     end
     
+endß
+
+function linkaxes!(parentaxis::Axis3, childaxis::Axis3)
+    on(parentaxis.azimuth) do az
+        childaxis.azimuth[] = az
+    end
+
+    on(parentaxis.elevation) do el
+        childaxzis.elevation[] = el
+    end
+end
+
+function linkaxes!(parentaxis::Axis3, childaxis::Vector{Axis3})
+    for child in childaxis
+        linkaxes!(parentaxis, child)
+    end
 end
