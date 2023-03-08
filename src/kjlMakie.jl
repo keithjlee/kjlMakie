@@ -23,7 +23,7 @@ export pastelß
 include("functions.jl")
 export discretize
 export labelize!
-export labelscale!ßß
+export labelscale!
 export changefont!
 export resetlabelscale!
 export gridtoggle!
