@@ -134,7 +134,7 @@ function simplifyspines!(axis::Axis3)
         axis.zspinecolor_3 = axis.xspinecolor_1[]
     end
     
-endß
+end
 
 function linkaxes!(parentaxis::Axis3, childaxis::Axis3)
     on(parentaxis.azimuth) do az
