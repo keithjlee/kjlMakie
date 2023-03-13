@@ -29,6 +29,9 @@ function labelize!(axis::Axis3)
     axis.zticksvisible = !axis.zticksvisible[]
 end
 
+"""
+turn on/off labels for Axis3
+"""
 function labelize!(axis::Axis)
     axis.titlevisible = !axis.titlevisible[]
     axis.xgridvisible = !axis.xgridvisible[]
@@ -45,7 +48,7 @@ function labelize!(axis::Axis)
 end
 
 """
-Scale fontsizes
+Scale fontsizes as a scaled factor of default sizes
 """
 function labelscale!(axis::Axis, factor::Union{Float64, Int64})
     axis.xlabelsize = labelFontSize * factor
@@ -55,6 +58,9 @@ function labelscale!(axis::Axis, factor::Union{Float64, Int64})
     axis.titlesize = titleFontSize * factor
 end
 
+"""
+Scale fontsizes as a scaled factor of default sizes
+"""
 function labelscale!(axis::Axis3, factor::Union{Float64, Int64})
     axis.titlesize = titleFontSize * factor
     axis.xlabelsize = labelFontSize * factor
@@ -65,6 +71,9 @@ function labelscale!(axis::Axis3, factor::Union{Float64, Int64})
     axis.zticklabelsize = tickFontSize * factor
 end
 
+"""
+Reset font sizes to default
+"""
 function resetlabelscale!(axis::Axis)
     axis.xlabelsize = labelFontSize
     axis.ylabelsize = labelFontSize
@@ -73,6 +82,9 @@ function resetlabelscale!(axis::Axis)
     axis.titlesize = titleFontSize
 end
 
+"""
+Reset font sizes to default
+"""
 function resetlabelscale!(axis::Axis3)
     axis.titlesize = titleFontSize
     axis.xlabelsize = labelFontSize
@@ -83,6 +95,9 @@ function resetlabelscale!(axis::Axis3)
     axis.zticklabelsize = tickFontSize
 end
 
+"""
+Change font of an axis
+"""
 function changefont!(axis::Axis, font::String)
     axis.titlefont = font
     axis.xlabelfont = font
@@ -91,6 +106,9 @@ function changefont!(axis::Axis, font::String)
     axis.yticklabelfont = font
 end
 
+"""
+Change font of an axis
+"""
 function changefont!(axis::Axis3, font::String)
     axis.titlefont = font
     axis.xlabelfont = font
@@ -101,17 +119,26 @@ function changefont!(axis::Axis3, font::String)
     axis.zticklabelfont = font
 end
 
+"""
+Toggle grid on and off
+"""
 function gridtoggle!(axis::Axis)
     axis.xgridvisible = !axis.xgridvisible[]
     axis.ygridvisible = !axis.ygridvisible[]
 end
 
+"""
+Toggle grid on and off
+"""
 function gridtoggle!(axis::Axis3)
     axis.xgridvisible = !axis.xgridvisible[]
     axis.ygridvisible = !axis.ygridvisible[]
     axis.zgridvisible = !axis.zgridvisible[]
 end
 
+"""
+Simplify spines on Axis3 to only have a single X, Y, Z spine
+"""
 function simplifyspines!(axis::Axis3)
 
     if axis.xspinecolor_2 != :transparent
@@ -136,6 +163,9 @@ function simplifyspines!(axis::Axis3)
     
 end
 
+"""
+Link the rotation of a parent Axis3 to a child Axis3
+"""
 function linkaxes!(parentaxis::Axis3, childaxis::Axis3)
     on(parentaxis.azimuth) do az
         childaxis.azimuth[] = az
@@ -146,8 +176,31 @@ function linkaxes!(parentaxis::Axis3, childaxis::Axis3)
     end
 end
 
+"""
+Link the rotation of a parent Axis3 to a set of chiled Axis3s
+"""
 function linkaxes!(parentaxis::Axis3, childaxis::Vector{Axis3})
     for child in childaxis
         linkaxes!(parentaxis, child)
     end
+end
+
+"""
+Turn X, Y data vectors into Vector{Point2}
+"""
+function pointify(X::Vector{T}, Y::Vector{T}) where {T <: Real}
+
+    @assert length(X) == length(Y) "Input vectors must be equal length"
+
+    return Point2.(eachrow([X Y]))
+end
+
+"""
+Turn X, Y, Z data vectors into Vector{Point3}
+"""
+function pointify(X::Vector{T}, Y::Vector{T}, Z::Vector{T}) where {T <: Real}
+
+    @assert length(X) == length(Y) == length(Z) "Input vectors must be equal length"
+
+    return Point3.(eachrow([X Y Z]))
 end

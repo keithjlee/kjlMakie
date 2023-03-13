@@ -41,21 +41,26 @@ lines(x, color = colorscale[2])
 ```
 
 ## Axis modification functions
-These functions work on `Axis, Axis3`.
 
-`labelize!(axis)` turns on/off the labels/decorations of an axis.
+`labelize!(::{Axis, Axis3})` turns on/off the labels/decorations of an axis.
 
-`labelscale!(axis, factor::Float64)` scales all text/numbers by a factor (1.0 = 100% = no change). 
+`labelscale!(::{Axis, Axis3}, factor::Float64)` scales all text/numbers by a factor (1.0 = 100% = no change). 
 
-`resetlabelscale!(axis)` resets text/number sizes to default; equivalent to `labelscale!(axis, 1)`
+`resetlabelscale!(::{Axis, Axis3})` resets text/number sizes to default; equivalent to `labelscale!(axis, 1)`
 
-`changefont!(axis)` changes the font family (default = Arial).
+`changefont!(::{Axis, Axis3})` changes the font family (default = Arial).
 
 ```
 changefont!(myaxis, "Times New Roman")
 ```
 
-`gridtoggle!(axis)` turns gridlines on/off.
+`gridtoggle!(::{Axis, Axis3})` turns gridlines on/off.
+
+`simplifyspines!(::Axis3)` Only show a single X, Y, Z spine
+
+`linkaxes!(parent::Axis3, child::Axis3)` Link the mouse rotation of a child Axis3 to a parent Axis3
+
+`pointify(::Vector, ::Vector; ::Vector)` Turn independent X, Y, (Z) vectors of data points into Point2 or Point3 data types for simpler plotting
 
 <!-- # Walkthrough
 Starting with a figure definition:
