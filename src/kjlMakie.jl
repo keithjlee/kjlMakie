@@ -29,7 +29,6 @@ export resetlabelscale!
 export gridtoggle!
 export simplifyspines!
 export linkaxes!
-export pointify
 
 end # module
  
