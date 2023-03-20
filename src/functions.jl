@@ -186,21 +186,36 @@ function linkaxes!(parentaxis::Axis3, childaxis::Vector{Axis3})
 end
 
 """
-Turn X, Y data vectors into Vector{Point2}
+Link arbitrary axis properties
 """
-function pointify(X::Vector{T}, Y::Vector{T}) where {T <: Real}
+function linkproperties!(parentaxis::Union{Axis, Axis3}, childaxis::Union{Axis, Axis3}, properties::Vector{Symbol})
+    @assert typeof(parentaxis) == typeof(childaxis) "Parent and child must have same Axis type (Axis or Axis3)"
 
-    @assert length(X) == length(Y) "Input vectors must be equal length"
 
-    return Point2.(eachrow([X Y]))
+    for property in properties
+        on(getproperty(parentaxis, property)) do val
+            getproperty(childaxis, property)[] = val
+        end
+    end
+
 end
 
-"""
-Turn X, Y, Z data vectors into Vector{Point3}
-"""
-function pointify(X::Vector{T}, Y::Vector{T}, Z::Vector{T}) where {T <: Real}
+# """
+# Turn X, Y data vectors into Vector{Point2}
+# """
+# function pointify(X::Vector{T}, Y::Vector{T}) where {T <: Real}
 
-    @assert length(X) == length(Y) == length(Z) "Input vectors must be equal length"
+#     @assert length(X) == length(Y) "Input vectors must be equal length"
 
-    return Point3.(eachrow([X Y Z]))
-end
+#     return Point2.(eachrow([X Y]))
+# end
+
+# """
+# Turn X, Y, Z data vectors into Vector{Point3}
+# """
+# function pointify(X::Vector{T}, Y::Vector{T}, Z::Vector{T}) where {T <: Real}
+
+#     @assert length(X) == length(Y) == length(Z) "Input vectors must be equal length"
+
+#     return Point3.(eachrow([X Y Z]))
+# end
