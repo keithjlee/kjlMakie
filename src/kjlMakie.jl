@@ -18,7 +18,7 @@ export red
 export orange
 export gray1
 export gray2
-export pastelß
+export pastel
 
 include("functions.jl")
 export discretize
