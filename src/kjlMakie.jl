@@ -1,6 +1,7 @@
 module kjlMakie
 
-using CairoMakie
+using Reexport
+@reexport using GLMakie
 using Colors
 
 include("colors.jl")
