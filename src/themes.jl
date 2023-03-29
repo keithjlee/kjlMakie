@@ -89,6 +89,8 @@ kjl_light = Theme(
 
     Hist = (color = blue,
         strokecolor = :black),
+
+    Text = (font = typeface,),
 )
 
 kjl_dark = Theme(
@@ -200,4 +202,6 @@ kjl_dark = Theme(
 
     Hist = (color = blue,
         strokecolor = :white),
+
+    Text = (font = typeface,),
 )
