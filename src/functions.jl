@@ -172,7 +172,7 @@ function linkaxes!(parentaxis::Axis3, childaxis::Axis3)
     end
 
     on(parentaxis.elevation) do el
-        childaxzis.elevation[] = el
+        childaxis.elevation[] = el
     end
 end
 
