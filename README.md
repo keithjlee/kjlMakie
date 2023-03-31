@@ -28,7 +28,7 @@ or
 
 `with_theme(kjl_light) do:`
 
-# Useful functions
+<!-- # Useful functions
 ## Colour-based functions
 `discretize` chops up a colormap into n discrete units to reference later. This is useful when plotting categorical data using a given color gradient. The output is a vector of colours that can be indexed. The default colormap is `:tempo`.
 
@@ -60,7 +60,7 @@ changefont!(myaxis, "Times New Roman")
 
 `linkaxes!(parent::Axis3, child::Axis3)` Link the mouse rotation of a child Axis3 to a parent Axis3
 
-`pointify(::Vector, ::Vector; ::Vector)` Turn independent X, Y, (Z) vectors of data points into Point2 or Point3 data types for simpler plotting
+`pointify(::Vector, ::Vector; ::Vector)` Turn independent X, Y, (Z) vectors of data points into Point2 or Point3 data types for simpler plotting -->
 
 <!-- # Walkthrough
 Starting with a figure definition:
