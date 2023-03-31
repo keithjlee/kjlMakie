@@ -18,7 +18,7 @@ Background colours are all set to transparent to allow for placement in non-whit
 
 `]add https://github.com/keithjlee/kjlMakie`
 
-then: `using kjlMakie, CairoMakie`
+kjlMakie auto-exports `GLMakie`, you simply need `using kjlMakie` to get started.
 
 and either:
 
