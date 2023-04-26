@@ -200,6 +200,36 @@ function linkproperties!(parentaxis::Union{Axis, Axis3}, childaxis::Union{Axis, 
 
 end
 
+"""
+Add mirrored ticks on the top and right spines
+"""
+function mirrorticks!(axis::Axis)
+    axis.xticksmirrored = !axis.xticksmirrored[]
+    axis.yticksmirrored = !axis.yticksmirrored[]
+end
+
+"""
+Position of ticks: 0 for outside, 1 for inside
+"""
+function alignticks!(axis::Axis, value::Integer)
+    @assert value == 0 || value == 1 "Value must be 0 or 1"
+
+    axis.xtickalign = value
+    axis.ytickalign = value
+end
+
+"""
+Toggle ticks on and off
+"""
+function tickstoggle!(axis::Union{Axis, Axis3})
+    axis.xticksvisible = !axis.xticksvisible[]
+    axis.yticksvisible = !axis.yticksvisible[]
+
+    if typeof(axis) == Axis3
+        axis.zticksvisible = !axis.zticksvisible[]
+    end
+end
+
 # """
 # Turn X, Y data vectors into Vector{Point2}
 # """

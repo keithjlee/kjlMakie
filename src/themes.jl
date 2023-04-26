@@ -12,7 +12,7 @@ kjl_light = Theme(
     palette = (color = [blue, green, pink, orange, gray1, gray2, :black],
         marker = [:circle, :rect, :utriangle, :xcross]),
 
-    Axis = (aspect = DataAspect(),
+    Axis = (aspect = 1,
         backgroundcolor = :transparent,
         xlabelfont = typeface,
         xlabelsize = labelFontSize,
@@ -30,7 +30,7 @@ kjl_light = Theme(
         ygridvisible = false),
 
     Axis3 = (backgroundcolor = :transparent,
-        aspect = :data,
+        aspect = (1,1,1),
         # titlevisible = false,
         # xgridvisible = false,
         # xlabelvisible = false,
@@ -104,7 +104,7 @@ kjl_dark = Theme(
     palette = (color = [blue, green, pink, orange, gray1, gray2, :white],
         marker = [:circle, :rect, :utriangle, :xcross]),
 
-    Axis = (aspect = DataAspect(),
+    Axis = (aspect = 1,
         backgroundcolor = :transparent,
         xlabelfont = typeface,
         xlabelsize = labelFontSize,
@@ -128,7 +128,7 @@ kjl_dark = Theme(
         ygridcolor = gray1),
 
     Axis3 = (backgroundcolor = :transparent,
-        aspect = :data,
+        aspect = (1,1,1),
         # titlevisible = false,
         # xgridvisible = false,
         # xlabelvisible = false,
