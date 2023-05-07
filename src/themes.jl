@@ -99,7 +99,7 @@ kjl_light = Theme(
 kjl_dark = Theme(
     textcolor = :white,
 
-    backgroundcolor = :transparent,
+    backgroundcolor = :black,
 
     palette = (color = [blue, green, pink, orange, gray1, gray2, :white],
         marker = [:circle, :rect, :utriangle, :xcross]),
