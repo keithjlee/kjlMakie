@@ -1,20 +1,21 @@
 # base colours
 green  = colorant"#48B674"
 blue = colorant"#3EA8DE"
-red = colorant"#EA2127"
 orange = colorant"#F9A11D"
 gray1 = colorant"#B2B2B2"
 gray2 = colorant"#808080"
 pink = colorant"#FF7BAC"
 
-red2blue = cgrad([red, :white, blue])
-green2blue = cgrad([green, :white, blue])
 pink2blue = cgrad([pink, :white, blue])
 
 white2blue = cgrad([:white, blue])
-white2red = cgrad([:white, red])
 white2pink = cgrad([:white, pink])
+white2black = cgrad([:white, :black])
+
 trans2blue = cgrad([:transparent, blue])
+trans2pink = cgrad([:transparent, pink])
+trans2black = cgrad([:transparent, :black])
+trans2white = cgrad([:transparent, :white])
 
 # custom color gradient (from PixelFrame)
 c1 = colorant"#7e90b7"
