@@ -27,26 +27,15 @@ kjl_light = Theme(
         xgridcolor = gray2,
         ygridcolor = gray2,
         xgridvisible = false,
-        ygridvisible = false),
+        ygridvisible = false,
+        xtickalign = 1,
+        ytickalign = 1,
+        xticksmirrored = true,
+        yticksmirrored = true
+        ),
 
     Axis3 = (backgroundcolor = :transparent,
         aspect = (1,1,1),
-        # titlevisible = false,
-        # xgridvisible = false,
-        # xlabelvisible = false,
-        # xspinesvisible = false,
-        # xticklabelsvisible = false,
-        # xticksvisible = false,
-        # ygridvisible = false,
-        # ylabelvisible = false,
-        # yspinesvisible = false,
-        # yticklabelsvisible = false,
-        # yticksvisible = false,
-        # zgridvisible = false,
-        # zlabelvisible = false,
-        # zspinesvisible = false,
-        # zticklabelsvisible = false,
-        # zticksvisible = false,
         xgridcolor = gray2,
         ygridcolor = gray2,
         zgridcolor = gray2,
@@ -68,23 +57,24 @@ kjl_light = Theme(
         elevation = pi/8
         ),
 
-    Line = (linewidth = 4,
-        cycle = [:color, :marker],
-        linestyle = :solid),
+    Lines = (linewidth = 4,),
 
     Colorbar = (labelfont = typeface,
-        ticklabelfont = typeface),
+        ticksvisible = false,
+        spinewidth = 0,
+        ticklabelfont = typeface,
+        colormap = trans2black,),
 
     Legend = (bgcolor = :white,
         framecolor = :black,
         labelfont = typeface,
         titlefont = typeface),
 
-    Heatmap = (colormap = trans2blue,),
+    Heatmap = (colormap = trans2black,),
 
-    Surface = (colormap = trans2blue,),
+    Surface = (colormap = trans2black,),
 
-    Spy = (colormap = trans2blue,),
+    Spy = (colormap = trans2black,),
 
     Scatter = (strokewidth = 1,
         cycle = [:color, :marker],
@@ -92,6 +82,11 @@ kjl_light = Theme(
 
     Hist = (color = blue,
         strokecolor = :black),
+
+    BarPlot = (color = blue,
+        gap = 0,
+        strokewidth = 1,
+        strokecolor = :white,),    
 
     Text = (font = typeface,),
 )
@@ -125,26 +120,15 @@ kjl_dark = Theme(
         xgridvisible = false,
         xgridcolor = gray1,
         ygridvisible = false,
-        ygridcolor = gray1),
+        ygridcolor = gray1,
+        xtickalign = 1,
+        ytickalign = 1,
+        xticksmirrored = true,
+        yticksmirrored = true
+        ),
 
     Axis3 = (backgroundcolor = :transparent,
         aspect = (1,1,1),
-        # titlevisible = false,
-        # xgridvisible = false,
-        # xlabelvisible = false,
-        # xspinesvisible = false,
-        # xticklabelsvisible = false,
-        # xticksvisible = false,
-        # ygridvisible = false,
-        # ylabelvisible = false,
-        # yspinesvisible = false,
-        # yticklabelsvisible = false,
-        # yticksvisible = false,
-        # zgridvisible = false,
-        # zlabelvisible = false,
-        # zspinesvisible = false,
-        # zticklabelsvisible = false,
-        # zticksvisible = false,
         xspinecolor_1 = :white,
         xspinecolor_2 = :white,
         xspinecolor_3 = :white,
@@ -184,23 +168,24 @@ kjl_dark = Theme(
         elevation = pi/8
         ),
 
-    Line = (linewidth = 4,
-        cycle = [:color, :marker],
-        linestyle = :solid),
+    Lines = (linewidth = 4,),
 
     Colorbar = (labelfont = typeface,
-        ticklabelfont = typeface),
+        ticksvisible = false,
+        spinewidth = 0,
+        ticklabelfont = typeface,
+        colormap = trans2white,),
 
     Legend = (bgcolor = :black,
         framecolor = :white,
         labelfont = typeface,
         titlefont = typeface),
 
-    Heatmap = (colormap = trans2blue,),
+    Heatmap = (colormap = trans2white,),
 
-    Surface = (colormap = trans2blue,),
+    Surface = (colormap = trans2white,),
 
-    Spy = (colormap = trans2blue,),
+    Spy = (colormap = trans2white,),
 
     Scatter = (strokewidth = 1,
         cycle = [:color, :marker],
@@ -208,6 +193,11 @@ kjl_dark = Theme(
 
     Hist = (color = blue,
         strokecolor = :white),
+
+    BarPlot = (color = blue,
+        gap = 0,
+        strokewidth = 1,
+        strokecolor = :black,),    
 
     Text = (font = typeface,),
 )
