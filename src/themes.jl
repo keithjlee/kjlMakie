@@ -65,7 +65,7 @@ kjl_light = Theme(
         ticklabelfont = typeface,
         colormap = trans2black,),
 
-    Legend = (bgcolor = :white,
+    Legend = (backgroundcolor = :white,
         framecolor = :black,
         labelfont = typeface,
         titlefont = typeface),
@@ -176,7 +176,7 @@ kjl_dark = Theme(
         ticklabelfont = typeface,
         colormap = trans2white,),
 
-    Legend = (bgcolor = :black,
+    Legend = (backgroundcolor = :black,
         framecolor = :white,
         labelfont = typeface,
         titlefont = typeface),
