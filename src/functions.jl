@@ -303,3 +303,8 @@ end
 
 #     return Point3.(eachrow([X Y Z]))
 # end
+
+"""
+    Get the size of a figure in pts
+"""
+Base.size(fig::Figure) = fig.scene.viewport.val.widths
