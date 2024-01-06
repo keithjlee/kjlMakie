@@ -308,3 +308,31 @@ end
     Get the size of a figure in pts
 """
 Base.size(fig::Figure) = fig.scene.viewport.val.widths
+
+"""
+    fixlimits!(ax::Axis)
+
+Fix axis limits to the current state
+"""
+function fixlimits!(ax::Axis)
+
+    lx, ly = copy(ax.finallimits[].origin)
+    ux, uy = copy(ax.finallimits[].widths)
+
+    ax.limits = (lx, ux, ly, uy)
+
+end
+
+"""
+    fixlimits!(ax::Axis3)
+    
+Fix axis limits to the current state
+"""
+function fixlimits!(ax::Axis3)
+
+    lx, ly, lz = copy(ax.finallimits[].origin)
+    ux, uy, uz = copy(ax.finallimits[].widths)
+
+    ax.limits = (lx, ux, ly, uy, lz, uz)
+
+end

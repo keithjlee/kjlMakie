@@ -47,6 +47,8 @@ export mirrorticks!
 export alignticks!
 export tickstoggle!
 
+export fixlimits!
+
 end # module
  
 #test123
