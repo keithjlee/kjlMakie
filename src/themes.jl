@@ -9,7 +9,7 @@ typeface = "Arial" #IBM Plex Sans, Libre Caslon Text, Times New Roman, Neue Haas
 kjl_light = Theme(
     backgroundcolor = :transparent,
 
-    palette = (color = [blue, green, pink, orange, gray1, gray2, :black],
+    palette = (color = [kjl_blue, kjl_green, kjl_pink, kjl_orange, kjl_gray, kjl_darkgray, :black],
         marker = [:circle, :rect, :utriangle, :xcross]),
 
     Axis = (aspect = 1,
@@ -85,7 +85,7 @@ kjl_light = Theme(
 
     BarPlot = (color = blue,
         gap = 0,
-        strokewidth = 1,
+        strokewidth = 0,
         strokecolor = :white,),    
 
     Text = (font = typeface,),
@@ -96,7 +96,7 @@ kjl_dark = Theme(
 
     backgroundcolor = :black,
 
-    palette = (color = [blue, green, pink, orange, gray1, gray2, :white],
+    palette = (color = [kjl_blue, kjl_green, kjl_pink, kjl_orange, kjl_gray, kjl_darkgray, :black],
         marker = [:circle, :rect, :utriangle, :xcross]),
 
     Axis = (aspect = 1,
@@ -196,7 +196,7 @@ kjl_dark = Theme(
 
     BarPlot = (color = blue,
         gap = 0,
-        strokewidth = 1,
+        strokewidth = 0,
         strokecolor = :black,),    
 
     Text = (font = typeface,),

@@ -10,12 +10,18 @@ export kjl_light
 export kjl_dark
 
 #colours
-export green
-export blue
-export pink
-export orange
-export gray1
-export gray2
+export kjl_blue
+export kjl_pink
+export kjl_green
+export kjl_turquoise
+export kjl_orange
+export kjl_tan
+export kjl_brown
+export kjl_gray
+export kjl_darkgray
+
+export caitlin_blue
+export caitlin_pink
 
 #gradients
 export pink2blue

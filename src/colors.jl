@@ -1,19 +1,28 @@
 # base colours
-green  = colorant"#48B674"
-blue = colorant"#3EA8DE"
-orange = colorant"#F9A11D"
-gray1 = colorant"#B2B2B2"
-gray2 = colorant"#808080"
-pink = colorant"#FF7BAC"
+kjl_pink = colorant"#f52565"
+kjl_blue = colorant"#2559f5"
+kjl_green = colorant"#58bc82"
+kjl_turquoise = colorant"#119da4"
+kjl_orange = colorant"#f5bb25"
+kjl_tan = colorant"#e9d985"
+kjl_brown = colorant"#c3b299"
+kjl_gray = colorant"#cbd4c2"
+kjl_darkgray = colorant"#50514f"
 
-pink2blue = cgrad([pink, :white, blue])
+# Legacy
+caitlin_blue = colorant"#3EA8DE"
+caitlin_pink = colorant"#FF7BAC"
 
-white2blue = cgrad([:white, blue])
-white2pink = cgrad([:white, pink])
+# Colour gradients
+
+pink2blue = cgrad([kjl_pink, :white, kjl_blue])
+
+white2blue = cgrad([:white, kjl_blue])
+white2pink = cgrad([:white, kjl_pink])
 white2black = cgrad([:white, :black])
 
-trans2blue = cgrad([:transparent, blue])
-trans2pink = cgrad([:transparent, pink])
+trans2blue = cgrad([:transparent, kjl_blue])
+trans2pink = cgrad([:transparent, kjl_pink])
 trans2black = cgrad([:transparent, :black])
 trans2white = cgrad([:transparent, :white])
 
