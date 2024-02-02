@@ -35,8 +35,6 @@ export trans2pink
 export trans2black
 export trans2white
 
-export pastel
-
 #utility functions
 include("functions.jl")
 export discretize
