@@ -90,7 +90,10 @@ end
 """
     resetlabelscale!(axis::Axis)
 
-Reset the font size to default
+Reset the font size to default:
+- tick labels = 18
+- axis labels = 20
+- title = 20
 """
 function resetlabelscale!(axis::Axis)
     axis.xlabelsize = labelFontSize
@@ -103,7 +106,10 @@ end
 """
     resetlabelscale!(axis::Axis3)
 
-Reset the font size to default
+Reset the font size to default:
+- tick labels = 18
+- axis labels = 20
+- title = 20
 """
 function resetlabelscale!(axis::Axis3)
     axis.titlesize = titleFontSize
