@@ -9,6 +9,10 @@ include("themes.jl")
 export kjl_light
 export kjl_dark
 
+include("themes_mono.jl")
+export kjl_light_mono
+export kjl_dark_mono
+
 #colours
 export kjl_blue
 export kjl_pink
