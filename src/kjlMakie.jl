@@ -57,6 +57,12 @@ export tickstoggle!
 
 export fixlimits!
 
+#styles
+include("axis_styles.jl")
+export graystyle!
+export cleanstyle!
+export asapstyle!
+
 end # module
  
 #test123
