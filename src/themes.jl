@@ -1,7 +1,7 @@
 # text sizes
-tickFontSize = 18
-labelFontSize = 20
-titleFontSize = 20
+tickFontSize = 10
+labelFontSize = 12
+titleFontSize = 12
 
 # font
 typeface = "Arial" #IBM Plex Sans, Libre Caslon Text, Times New Roman, Neue Haas Unica Pro
