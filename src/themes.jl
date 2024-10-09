@@ -57,7 +57,7 @@ kjl_light = Theme(
         elevation = pi/8
         ),
 
-    Lines = (linewidth = 4,),
+    Lines = (linewidth = 2,),
 
     Colorbar = (labelfont = typeface,
         ticksvisible = false,
@@ -78,7 +78,7 @@ kjl_light = Theme(
 
     Scatter = (strokewidth = 1,
         cycle = [:color, :marker],
-        strokecolor = :white),
+        strokecolor = :black),
 
     Hist = (color = kjl_blue,
         strokecolor = :black),
@@ -168,7 +168,7 @@ kjl_dark = Theme(
         elevation = pi/8
         ),
 
-    Lines = (linewidth = 4,),
+    Lines = (linewidth = 2,),
 
     Colorbar = (labelfont = typeface,
         ticksvisible = false,

@@ -10,9 +10,9 @@ kjl_light_mono = Theme(
         xlabelsize = labelFontSize,
         ylabelfont = "IBM Plex Mono",
         ylabelsize = labelFontSize,
-        xticklabelfont= typeface,
+        xticklabelfont= "IBM Plex Mono",
         xticklabelsize = labelFontSize,
-        yticklabelfont = typeface,
+        yticklabelfont = "IBM Plex Mono",
         yticklabelsize = labelFontSize,
         titlefont = "IBM Plex Mono Bold",
         titlesize = titleFontSize,
@@ -35,9 +35,9 @@ kjl_light_mono = Theme(
         xlabelfont = "IBM Plex Mono",
         ylabelfont = "IBM Plex Mono",
         zlabelfont = "IBM Plex Mono",
-        xticklabelfont = typeface,
-        yticklabelfont = typeface,
-        zticklabelfont = typeface,
+        xticklabelfont = "IBM Plex Mono",
+        yticklabelfont = "IBM Plex Mono",
+        zticklabelfont = "IBM Plex Mono",
         titlesize = titleFontSize,
         xlabelsize = labelFontSize,
         ylabelsize = labelFontSize,
@@ -49,12 +49,12 @@ kjl_light_mono = Theme(
         elevation = pi/8
         ),
 
-    Lines = (linewidth = 4,),
+    Lines = (linewidth = 2,),
 
     Colorbar = (labelfont = "IBM Plex Mono",
         ticksvisible = false,
         spinewidth = 0,
-        ticklabelfont = typeface,
+        ticklabelfont = "IBM Plex Mono",
         colormap = trans2black,),
 
     Legend = (backgroundcolor = :white,
@@ -70,7 +70,7 @@ kjl_light_mono = Theme(
 
     Scatter = (strokewidth = 1,
         cycle = [:color, :marker],
-        strokecolor = :white),
+        strokecolor = :black),
 
     Hist = (color = kjl_blue,
         strokecolor = :black),
@@ -97,9 +97,9 @@ kjl_dark_mono = Theme(
         xlabelsize = labelFontSize,
         ylabelfont = "IBM Plex Mono",
         ylabelsize = labelFontSize,
-        xticklabelfont= typeface,
+        xticklabelfont= "IBM Plex Mono",
         xticklabelsize = labelFontSize,
-        yticklabelfont = typeface,
+        yticklabelfont = "IBM Plex Mono",
         yticklabelsize = labelFontSize,
         titlefont = "IBM Plex Mono Bold",
         titlesize = titleFontSize,
@@ -143,9 +143,9 @@ kjl_dark_mono = Theme(
         xlabelfont = "IBM Plex Mono",
         ylabelfont = "IBM Plex Mono",
         zlabelfont = "IBM Plex Mono",
-        xticklabelfont = typeface,
-        yticklabelfont = typeface,
-        zticklabelfont = typeface,
+        xticklabelfont = "IBM Plex Mono",
+        yticklabelfont = "IBM Plex Mono",
+        zticklabelfont = "IBM Plex Mono",
         titlesize = titleFontSize,
         xlabelsize = labelFontSize,
         ylabelsize = labelFontSize,
@@ -160,12 +160,12 @@ kjl_dark_mono = Theme(
         elevation = pi/8
         ),
 
-    Lines = (linewidth = 4,),
+    Lines = (linewidth = 2,),
 
     Colorbar = (labelfont = "IBM Plex Mono",
         ticksvisible = false,
         spinewidth = 0,
-        ticklabelfont = typeface,
+        ticklabelfont = "IBM Plex Mono",
         colormap = trans2white,),
 
     Legend = (backgroundcolor = :black,
