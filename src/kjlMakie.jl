@@ -63,4 +63,10 @@ export graystyle!
 export cleanstyle!
 export asapstyle!
 
+#sizes
+include("figure_sizes.jl")
+export halfwidth
+export fullwidth
+export customwidth
+
 end # module
