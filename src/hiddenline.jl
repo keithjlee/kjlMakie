@@ -16,10 +16,12 @@ order, which CairoMakie preserves:
    stub at each end carrying its node's depth, and is split wherever it passes over another
    node's dot, so dots and members are ordered by their depths AT the dot: a node is hidden only
    by a member that is really in front of it;
-5. sort everything far → near; with `halo = true` the NEARER member's stub at each crossing is
-   first drawn in the background colour, wider, so the far member shows a small gap where the
-   near one crosses it (the engineering hidden-line look). Stub lengths follow the crossing angle
-   and the line widths, so the gap is just wide enough.
+5. with `halo = true`, at each real crossing the FAR member is cut: the interval where it lies
+   within the near member's band (half-width w/2 + `halowidth`), with room for its round end
+   caps, is removed (the engineering hidden-line look). Nothing is painted over the
+   background, so gaps never show as blobs over a ground plane or other members; shallow-angle
+   crossings and those next to a joint get depth-ordering stubs instead of gaps;
+6. sort everything far → near and emit.
 
 Output is plain 2D, so `structurestyle!` / `fitstructure!` apply as for any 2D drawing.
 =#
@@ -67,14 +69,14 @@ _expand(x, n) = x isa AbstractVector ? x : fill(x, n)
     hiddenline!(ax::Axis, starts, ends; azimuth = -3π/4, elevation = π/8, color = kjl_black,
                 linewidth = 1.0, nodes = nothing, nodesize = 4.0, nodecolor = :white,
                 nodestrokecolor = kjl_black, nodestrokewidth = 0.75, halo = true,
-                halowidth = 0.8, background = :white, width = 400, ground = false)
+                halowidth = 0.6, background = :white, width = 400, ground = false)
 
 Draw 3D line segments `starts[i] → ends[i]` (3D points) into the 2D axis `ax` as an
 orthographic view with correct occlusion (see the file header). `color`/`linewidth` [pt] are
 scalars or one per segment. `nodes` (3D points) are drawn as outlined dots of diameter
 `nodesize` [pt] over the members that meet there and under nearer members. `halo` cuts a
-`halowidth` [pt] gap on each side of the NEARER member into the farther one at every crossing
-(colour `background`). `width` is the approximate printed width of the drawing [pt], used to
+gap into the farther member at every real crossing, `halowidth` [pt] clear of the nearer
+member's edges (`background` is unused, kept for compatibility). `width` is the approximate printed width of the drawing [pt], used to
 size the crossing stubs and halos in data units. `ground = true` draws the projected
 footprint (bounding rectangle at the lowest z) as a light ground plane behind everything.
 
@@ -84,7 +86,7 @@ function hiddenline!(ax::Axis, starts::AbstractVector, ends::AbstractVector;
     azimuth::Real = -3pi / 4, elevation::Real = pi / 8,
     color = kjl_black, linewidth = 1.0,
     nodes = nothing, nodesize = 4.0, nodecolor = :white, nodestrokecolor = kjl_black, nodestrokewidth = 0.75,
-    halo::Bool = true, halowidth = 0.8, background = :white, width = 400,
+    halo::Bool = true, halowidth = 0.6, background = :white, width = 400,
     ground::Bool = false, groundcolor = (kjl_lightgray, 0.35), groundpad = 0.04)
 
     n = length(starts)
@@ -107,7 +109,7 @@ function hiddenline!(ax::Axis, starts::AbstractVector, ends::AbstractVector;
     hasnodes = nodes !== nothing && !isempty(nodes)
     rnode = hasnodes ? nodesize / 2 + nodestrokewidth : 0.0      # node dot radius [pt]
 
-    # split events per member: (t, stub half-length [data], halo?)
+    # split events per member: (t, half-length [data], is a gap)
     cuts = [Tuple{Float64,Float64,Bool}[] for _ in 1:n]
 
     # --- member ends: a stub at each end carries the NODE's depth, so the node (a hair in
@@ -134,16 +136,24 @@ function hiddenline!(ax::Axis, starts::AbstractVector, ends::AbstractVector;
             t, s = c
             ri = B[i] - A[i]; rj = B[j] - A[j]
             sinθ = abs(ri[1] * rj[2] - ri[2] * rj[1]) / (Ls[i] * Ls[j])
-            sθ = max(sinθ, 0.05)
-            # stub on each member long enough to contain the other's halo band
-            hi_ = min(((lws[j] / 2 + halowidth) / sθ + lws[i] / 2 + 0.5) * upt, capδ)
-            hj_ = min(((lws[i] / 2 + halowidth) / sθ + lws[j] / 2 + 0.5) * upt, capδ)
             inear = za[i] + t * (zb[i] - za[i]) > za[j] + s * (zb[j] - za[j])
-            # halo only for real crossings: not at shallow angles (members lined up behind each
-            # other would get long white smears) and not next to a joint (it would cut the joint)
+            # GAP (no painted halo): cut the far member so its round-capped ends stay clear of the
+            # near member's band (half-width w_near/2 + clearance).
+            # Only at real crossings: not at shallow angles (lined-up members) or next to a joint.
             rj_ = (max(rnode, lws[i], lws[j]) + halowidth + 1.0) * upt
-            h_ok = halo && sinθ > 0.26 && !nearend(t, i, rj_) && !nearend(s, j, rj_)
-            push!(cuts[i], (t, hi_, inear && h_ok)); push!(cuts[j], (s, hj_, !inear && h_ok))
+            gap_ok = halo && sinθ > 0.26 && !nearend(t, i, rj_) && !nearend(s, j, rj_)
+            if gap_ok
+                n_, f_, tf = inear ? (i, j, s) : (j, i, t)
+                # the far piece's round end cap (radius w_far/2) must clear the band: d·sinθ ≥ w_n/2 + c + w_f/2
+                g = ((lws[n_] / 2 + halowidth + lws[f_] / 2) / sinθ) * upt
+                push!(cuts[f_], (tf, min(g, capδ), true))
+            else
+                # ordering stubs: the depth at the crossing decides who is drawn on top
+                sθ = max(sinθ, 0.05)
+                hi_ = min((lws[j] / (2sθ) + lws[i] / 2 + 0.5) * upt, capδ)
+                hj_ = min((lws[i] / (2sθ) + lws[j] / 2 + 0.5) * upt, capδ)
+                push!(cuts[i], (t, hi_, false)); push!(cuts[j], (s, hj_, false))
+            end
         end
     end
 
@@ -173,12 +183,12 @@ function hiddenline!(ax::Axis, starts::AbstractVector, ends::AbstractVector;
         dz(t) = za[i] + t * (zb[i] - za[i])
         sort!(cuts[i]; by = first)
         t0 = 0.0
-        for (tc, h, hl) in cuts[i]
+        for (tc, h, isgap) in cuts[i]
             dt = L > 0 ? h / L : 0.0
             a, b = max(tc - dt, t0), min(tc + dt, 1.0)
             b <= a && continue
             a > t0 && push!(prims, (dz((t0 + a) / 2), 0, pt(t0), pt(a), cols[i], lws[i]))
-            push!(prims, (dz(tc), hl ? 3 : 1, pt(a), pt(b), cols[i], lws[i]))
+            isgap || push!(prims, (dz(tc), 1, pt(a), pt(b), cols[i], lws[i]))
             t0 = b
         end
         t0 < 1 && push!(prims, (dz((t0 + 1) / 2), 0, pt(t0), pt(1.0), cols[i], lws[i]))
@@ -202,15 +212,6 @@ function hiddenline!(ax::Axis, starts::AbstractVector, ends::AbstractVector;
         if kind == 2
             seg!(p, p + Point2d(ε, 0), nodestrokecolor, nodesize + 2nodestrokewidth)
             seg!(p, p + Point2d(ε, 0), nodecolor, nodesize)
-        elseif kind == 3
-            # halo with butt-like extent: shorten by the round-cap radius so it stays on the stub
-            v = q - p; l = sqrt(sum(abs2, v))
-            r = (w / 2 + halowidth) * upt
-            if l > 2r
-                e = v * (r / l)
-                seg!(p + e, q - e, background, w + 2halowidth)
-            end
-            seg!(p, q, c, w)
         else
             seg!(p, q, c, w)
         end
