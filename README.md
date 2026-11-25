@@ -59,7 +59,9 @@ savereport("trace.pdf", fig)               # 1 pt per unit: embed at natural siz
   depth buffer): crossing splits, halos at real crossings, nodes ordered by depth.
 - `hiddenface!(ax, points, triangles, starts, ends; facecolor, colormap, colorrange, edges, ...)`:
   the same with opaque faces (shells): faces painter-sorted, lines and nodes behind a nearer face
-  removed. Returns the face plot for a `Colorbar`.
+  removed. Returns the face plot for a `Colorbar`. Per-point face colours are rasterized at 2×
+  (`rasterize`): vector mesh gradients render white or patchy in PDF viewers and Typst. Do the
+  same (`rasterize = 2`) for any colour-mapped `mesh!` saved to PDF.
 - `signedband!(ax, x, y)`: blue/red fill of a generic signed series (not for N/V/M).
 
 Backgrounds are transparent for placement in non-white settings. `GLMakie` needs an opaque

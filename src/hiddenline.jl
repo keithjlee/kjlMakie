@@ -97,13 +97,17 @@ end
 `hiddenline!` with opaque triangles (`points` 3D, `triangles` n×3; `facecolor` one value per
 point → `colormap`/`colorrange`, or one colour): faces drawn far → near, members and nodes
 behind a nearer face removed (lines lying on a face stay). `edges = (starts, ends)` adds face
-outlines, culled the same way, drawn plainly under the members. Returns the face plot (for a
+outlines, culled the same way, drawn plainly under the members. Per-point colours are rasterized
+(`rasterize = 2`, a scale factor on the figure resolution): CairoMakie writes them as a PDF mesh
+gradient, which PDF viewers and Typst render white or patchy. Lines, nodes and text stay vector;
+pass `rasterize = false` to keep the faces vector too. Returns the face plot (for a
 `Colorbar`).
 """
 function hiddenface!(ax::Axis, points::AbstractVector, tris::AbstractMatrix{<:Integer},
     starts::AbstractVector, ends::AbstractVector;
     azimuth::Real = -3pi / 4, elevation::Real = pi / 8,
     facecolor = kjl_lightgray, colormap = kjl_sequential, colorrange = nothing,
+    rasterize = facecolor isa AbstractVector ? 2 : false,
     edges = nothing, edgecolor = (kjl_black, 0.3), edgewidth = 0.3,
     color = kjl_black, linewidth = 1.0,
     nodes = nothing, nodesize = 4.0, nodecolor = :white, nodestrokecolor = kjl_black, nodestrokewidth = 0.75,
@@ -122,8 +126,8 @@ function hiddenface!(ax::Axis, points::AbstractVector, tris::AbstractMatrix{<:In
     sorted = F.tris[H.faceorder, :]
     m = facecolor isa AbstractVector ?
         mesh!(ax, xy, sorted; color = facecolor, colormap = colormap,
-            colorrange = colorrange === nothing ? extrema(facecolor) : colorrange, shading = NoShading) :
-        mesh!(ax, xy, sorted; color = facecolor, shading = NoShading)
+            colorrange = colorrange === nothing ? extrema(facecolor) : colorrange, shading = NoShading, rasterize) :
+        mesh!(ax, xy, sorted; color = facecolor, shading = NoShading, rasterize)
     if edges !== nothing
         es, ee, _ = hl_cull(edges[1], edges[2], F, basis; tol = 1e-4 * H.span)
         if !isempty(es)
