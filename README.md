@@ -47,6 +47,12 @@ savereport("trace.pdf", fig)               # 1 pt per unit: embed at natural siz
   data (nodes and labels at the edges are not clipped) and, for 2D, the figure sized to the
   true aspect.
 - `diagramband!(ax, x, y)`: internal-force diagram, black outline + 50 % fill.
+- `hiddenline!(ax, starts, ends; azimuth, elevation, color, linewidth, nodes, halo, ground, width)`:
+  3D line structures drawn into a 2D axis with correct occlusion in PDF/SVG (CairoMakie has no
+  depth buffer): crossing splits, halos at real crossings, nodes ordered by depth.
+- `hiddenface!(ax, points, triangles, starts, ends; facecolor, colormap, colorrange, edges, ...)`:
+  the same with opaque faces (shells): faces painter-sorted, lines and nodes behind a nearer face
+  removed. Returns the face plot for a `Colorbar`.
 - `signedband!(ax, x, y)`: blue/red fill of a generic signed series (not for N/V/M).
 
 Backgrounds are transparent for placement in non-white settings. `GLMakie` needs an opaque

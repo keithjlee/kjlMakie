@@ -224,8 +224,171 @@ function hiddenline!(ax::Axis, starts::AbstractVector, ends::AbstractVector;
         corners = [Point3d(xs[1] - m, ys[1] - m, zmin), Point3d(xs[2] + m, ys[1] - m, zmin),
                    Point3d(xs[2] + m, ys[2] + m, zmin), Point3d(xs[1] - m, ys[2] + m, zmin)]
         g, _ = project3d(corners, azimuth, elevation)
-        poly!(ax, g; color = groundcolor, strokewidth = 0)
+        gp = poly!(ax, g; color = groundcolor, strokewidth = 0)
+        translate!(gp, 0, 0, -10)                              # always behind
     end
     linesegments!(ax, pts; color = C, linewidth = W, linecap = :round)
     return allxy
+end
+
+# ── phase 2: opaque faces ─────────────────────────────────────────────────────────────────
+
+# barycentric coordinates of p in 2D triangle (a, b, c), or nothing if degenerate
+function _bary(p, a, b, c)
+    v0 = b - a; v1 = c - a; v2 = p - a
+    den = v0[1] * v1[2] - v1[1] * v0[2]
+    abs(den) < 1e-14 && return nothing
+    l1 = (v2[1] * v1[2] - v1[1] * v2[2]) / den
+    l2 = (v0[1] * v2[2] - v2[1] * v0[2]) / den
+    return (1 - l1 - l2, l1, l2)
+end
+
+"""
+    FaceSet(points, triangles; azimuth, elevation)
+
+Projected opaque triangles for `hiddenline!`'s `faces`: `points` 3D vertices, `triangles` an
+n×3 index matrix. Holds 2D vertices, depths and bounding boxes for occlusion queries.
+"""
+struct FaceSet
+    xy::Vector{Point2d}
+    z::Vector{Float64}
+    tris::Matrix{Int}
+    bbox::Vector{NTuple{4,Float64}}
+end
+function FaceSet(points::AbstractVector, tris::AbstractMatrix{<:Integer}, azimuth, elevation)
+    xy, z = project3d(points, azimuth, elevation)
+    bb = [begin
+        a, b, c = xy[tris[k, 1]], xy[tris[k, 2]], xy[tris[k, 3]]
+        (min(a[1], b[1], c[1]), max(a[1], b[1], c[1]), min(a[2], b[2], c[2]), max(a[2], b[2], c[2]))
+    end for k in axes(tris, 1)]
+    return FaceSet(xy, z, Matrix{Int}(tris), bb)
+end
+
+# is the screen point p at depth zp hidden behind some face (nearer by more than tol)?
+function _occluded(F::FaceSet, p, zp, tol)
+    for k in eachindex(F.bbox)
+        b = F.bbox[k]
+        (p[1] < b[1] || p[1] > b[2] || p[2] < b[3] || p[2] > b[4]) && continue
+        i, j, l = F.tris[k, 1], F.tris[k, 2], F.tris[k, 3]
+        w = _bary(p, F.xy[i], F.xy[j], F.xy[l])
+        w === nothing && continue
+        (w[1] < -1e-9 || w[2] < -1e-9 || w[3] < -1e-9) && continue
+        zf = w[1] * F.z[i] + w[2] * F.z[j] + w[3] * F.z[l]
+        zf > zp + tol && return true
+    end
+    return false
+end
+
+"""
+    cull_by_faces(starts, ends, F::FaceSet, azimuth, elevation; tol) -> (starts, ends, parent)
+
+Split each 3D segment where its projection crosses a face edge and keep only the pieces not
+hidden behind a nearer face (`tol` [data units] keeps lines lying ON a face visible).
+`parent[k]` is the input segment of output piece k.
+"""
+function cull_by_faces(starts, ends, F::FaceSet, azimuth, elevation; tol)
+    A, za = project3d(starts, azimuth, elevation)
+    B, zb = project3d(ends, azimuth, elevation)
+    # unique face edges
+    E = Set{Tuple{Int,Int}}()
+    for k in axes(F.tris, 1), (a, b) in ((1, 2), (2, 3), (3, 1))
+        i, j = F.tris[k, a], F.tris[k, b]
+        push!(E, (min(i, j), max(i, j)))
+    end
+    E = collect(E)
+    ebx = [(min(F.xy[i][1], F.xy[j][1]), max(F.xy[i][1], F.xy[j][1]), min(F.xy[i][2], F.xy[j][2]), max(F.xy[i][2], F.xy[j][2])) for (i, j) in E]
+    S2 = eltype(starts)[]; E2 = eltype(ends)[]; parent = Int[]
+    for s in eachindex(starts)
+        a, b = A[s], B[s]
+        sx = (min(a[1], b[1]), max(a[1], b[1]), min(a[2], b[2]), max(a[2], b[2]))
+        ts = [0.0, 1.0]
+        for (e, (i, j)) in enumerate(E)
+            q = ebx[e]
+            (q[1] > sx[2] || q[2] < sx[1] || q[3] > sx[4] || q[4] < sx[3]) && continue
+            c = _crossing(a, b, F.xy[i], F.xy[j])
+            c === nothing || push!(ts, c[1])
+        end
+        sort!(ts); unique!(ts)
+        P3(t) = starts[s] + t * (ends[s] - starts[s])
+        run0 = nothing
+        for k in 1:length(ts)-1
+            tm = (ts[k] + ts[k+1]) / 2
+            vis = !_occluded(F, a + tm * (b - a), za[s] + tm * (zb[s] - za[s]), tol)
+            if vis
+                run0 === nothing && (run0 = ts[k])
+            elseif run0 !== nothing
+                push!(S2, P3(run0)); push!(E2, P3(ts[k])); push!(parent, s); run0 = nothing
+            end
+        end
+        run0 === nothing || (push!(S2, P3(run0)); push!(E2, P3(1.0)); push!(parent, s))
+    end
+    return S2, E2, parent
+end
+
+"""
+    hiddenface!(ax::Axis, points, triangles, starts, ends; azimuth, elevation, facecolor,
+                colormap, colorrange, edges = nothing, edgecolor, edgewidth, kwargs...)
+
+Phase 2 of `hiddenline!`: opaque triangles (`points` 3D, `triangles` n×3, `facecolor` one
+value per point → `colormap`/`colorrange`, or a colour) plus line segments and nodes, with
+occlusion between all of them in vector output:
+faces are drawn far → near (painter's order by centroid depth); line pieces and nodes behind a
+nearer face are removed (lines lying on a face stay); the rest goes through `hiddenline!`
+(crossings, halos, node ordering). `edges = (starts, ends)` adds face outlines (mesh lines),
+culled the same way, without halos. Remaining keywords go to `hiddenline!`.
+Returns the face `mesh!` plot (for a Colorbar).
+"""
+function hiddenface!(ax::Axis, points::AbstractVector, tris::AbstractMatrix{<:Integer},
+    starts::AbstractVector, ends::AbstractVector;
+    azimuth::Real = -3pi / 4, elevation::Real = pi / 8,
+    facecolor = kjl_lightgray, colormap = kjl_sequential, colorrange = nothing,
+    edges = nothing, edgecolor = (kjl_black, 0.3), edgewidth = 0.3,
+    color = kjl_black, linewidth = 1.0, nodes = nothing, ground::Bool = false,
+    groundcolor = (kjl_lightgray, 0.35), groundpad = 0.04, kwargs...)
+
+    F = FaceSet(points, tris, azimuth, elevation)
+    allp = vcat(points, starts, ends)
+    span = maximum(d -> -(reverse(extrema(p -> p[d], allp))...), 1:3)
+    tol = 1e-4 * span
+
+    if ground
+        xs = extrema(p -> p[1], allp); ys = extrema(p -> p[2], allp); zmin = minimum(p -> p[3], allp)
+        m = groundpad * max(xs[2] - xs[1], ys[2] - ys[1])
+        corners = [Point3d(xs[1] - m, ys[1] - m, zmin), Point3d(xs[2] + m, ys[1] - m, zmin),
+                   Point3d(xs[2] + m, ys[2] + m, zmin), Point3d(xs[1] - m, ys[2] + m, zmin)]
+        g, _ = project3d(corners, azimuth, elevation)
+        gp = poly!(ax, g; color = groundcolor, strokewidth = 0)
+        translate!(gp, 0, 0, -10)                              # always behind
+    end
+
+    # faces far → near
+    cz = [(F.z[tris[k, 1]] + F.z[tris[k, 2]] + F.z[tris[k, 3]]) / 3 for k in axes(tris, 1)]
+    ord = sortperm(cz)
+    sorted = F.tris[ord, :]
+    m = facecolor isa AbstractVector ?
+        mesh!(ax, F.xy, sorted; color = facecolor, colormap = colormap,
+            colorrange = colorrange === nothing ? extrema(facecolor) : colorrange, shading = NoShading) :
+        mesh!(ax, F.xy, sorted; color = facecolor, shading = NoShading)
+
+    # face outlines: culled, then drawn plainly (no halos), under the members
+    if edges !== nothing
+        es, ee, _ = cull_by_faces(edges[1], edges[2], F, azimuth, elevation; tol)
+        if !isempty(es)
+            P, _ = project3d(vcat([[a, b] for (a, b) in zip(es, ee)]...), azimuth, elevation)
+            linesegments!(ax, P; color = edgecolor, linewidth = edgewidth)
+        end
+    end
+
+    # members and nodes
+    n = length(starts)
+    cols = _expand(color, n); lws = _expand(linewidth, n)
+    s2, e2, par = cull_by_faces(starts, ends, F, azimuth, elevation; tol)
+    nds = nodes === nothing ? nothing :
+        [p for p in nodes if begin
+            xy, z = project3d([p], azimuth, elevation)
+            !_occluded(F, xy[1], z[1], tol)
+        end]
+    isempty(s2) || hiddenline!(ax, s2, e2; azimuth, elevation, color = cols[par], linewidth = lws[par],
+        nodes = nds, kwargs...)
+    return m
 end

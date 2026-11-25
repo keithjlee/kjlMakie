@@ -101,6 +101,9 @@ export asapstyle!
 #hidden-line 3D → 2D vector drawing
 include("hiddenline.jl")
 export hiddenline!
+export hiddenface!
+export FaceSet
+export cull_by_faces
 export view_basis
 export project3d
 
