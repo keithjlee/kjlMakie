@@ -342,3 +342,42 @@ function fixlimits!(ax::Axis3)
     ax.limits = (lx, ux, ly, uy, lz, uz)
 
 end
+"""
+    signedband!(ax, x, y; alpha = 0.25, linecolor = kjl_black, linewidth = 1.2)
+
+Diagram of a signed quantity along `x` (N, V, M along a member; any signed series): the area
+between 0 and `y` filled kjl_blue where y > 0 and kjl_red where y < 0 (zero crossings
+interpolated), outlined by `y` in `linecolor`, with a thin zero line.
+"""
+function signedband!(ax, x::AbstractVector, y::AbstractVector; alpha = 0.25, linecolor = kjl_black,
+    linewidth = 1.2, zeroline = true)
+    xs = Float64[]; ys = Float64[]
+    for i in eachindex(x)
+        if i > firstindex(x) && sign(y[i]) * sign(y[i-1]) < 0
+            t = y[i-1] / (y[i-1] - y[i])
+            push!(xs, x[i-1] + t * (x[i] - x[i-1])); push!(ys, 0.0)
+        end
+        push!(xs, x[i]); push!(ys, y[i])
+    end
+    z = zeros(length(xs))
+    band!(ax, xs, z, max.(ys, 0.0); color = (kjl_tension, alpha))
+    band!(ax, xs, min.(ys, 0.0), z; color = (kjl_compression, alpha))
+    zeroline && hlines!(ax, [0.0]; color = kjl_midgray, linewidth = 0.5, linestyle = :solid)
+    lines!(ax, x, y; color = linecolor, linewidth = linewidth, linestyle = :solid)
+    return ax
+end
+
+"""
+    diagramband!(ax, x, y; color = kjl_black, alpha = 0.5, linewidth = 1.0)
+
+Internal-force diagram (N, V, M along a member): the area between 0 and `y` filled with
+`color` at `alpha` (50 %), outlined by `y` in `color`, thin gray zero line. A single diagram
+stays black; when several are compared, pass `color = kjl_categorical[i]`.
+"""
+function diagramband!(ax, x::AbstractVector, y::AbstractVector; color = kjl_black, alpha = 0.5,
+    linewidth = 1.0, zeroline = true)
+    band!(ax, x, zeros(length(x)), y; color = (color, alpha))
+    zeroline && hlines!(ax, [0.0]; color = kjl_midgray, linewidth = 0.5, linestyle = :solid)
+    lines!(ax, x, y; color = color, linewidth = linewidth, linestyle = :solid)
+    return ax
+end
