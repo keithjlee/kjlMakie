@@ -368,16 +368,30 @@ function signedband!(ax, x::AbstractVector, y::AbstractVector; alpha = 0.25, lin
 end
 
 """
-    diagramband!(ax, x, y; color = kjl_black, alpha = 0.5, linewidth = 1.0)
+    diagramband!(ax, x, y; color = kjl_black, fill = nothing, linewidth = 1.0)
 
-Internal-force diagram (N, V, M along a member): the area between 0 and `y` filled with
-`color` at `alpha` (50 %), outlined by `y` in `color`, thin gray zero line. A single diagram
-stays black; when several are compared, pass `color = kjl_categorical[i]`.
+Internal-force diagram (N, V, M along a member): the area between 0 and `y` filled, outlined
+by `y` in `color`, thin gray zero line. One diagram: black line on the light gray
+`kjl_diagramgray` fill (the default). Several compared: `color = kjl_categorical[i]`, and the
+fill becomes a light tint of that colour (`fill` overrides).
 """
-function diagramband!(ax, x::AbstractVector, y::AbstractVector; color = kjl_black, alpha = 0.5,
+function diagramband!(ax, x::AbstractVector, y::AbstractVector; color = kjl_black, fill = nothing,
     linewidth = 1.0, zeroline = true)
-    band!(ax, x, zeros(length(x)), y; color = (color, alpha))
+    f = fill !== nothing ? fill : (color == kjl_black ? kjl_diagramgray : (color, 0.15))
+    band!(ax, x, zeros(length(x)), y; color = f)
     zeroline && hlines!(ax, [0.0]; color = kjl_midgray, linewidth = 0.5, linestyle = :solid)
     lines!(ax, x, y; color = color, linewidth = linewidth, linestyle = :solid)
+    return ax
+end
+
+"""
+    zerobase!(ax, values)
+
+Bar charts start exactly at zero: all values ≥ 0 → the y range starts at 0 (no margin below
+the bars); all ≤ 0 → it ends at 0; mixed signs → unchanged (draw a zero line).
+"""
+function zerobase!(ax, values)
+    lo, hi = extrema(values)
+    lo >= 0 ? ylims!(ax; low = 0) : hi <= 0 ? ylims!(ax; high = 0) : nothing
     return ax
 end

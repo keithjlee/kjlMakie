@@ -13,14 +13,14 @@ from the plotted data so nodes, markers and labels at the extremities are not cl
     plotstyle!(axis::Axis)
 
 The `kjl_light` look on an existing axis: white/transparent background, left + bottom spines
-only, ticks inside, no grid.
+only (black), ticks outside, no grid.
 """
 function plotstyle!(axis::Axis)
     axis.backgroundcolor = :transparent
     axis.topspinevisible = axis.rightspinevisible = false
     axis.leftspinevisible = axis.bottomspinevisible = true
     axis.xticksvisible = axis.yticksvisible = true
-    axis.xtickalign = axis.ytickalign = 1
+    axis.xtickalign = axis.ytickalign = 0
     axis.xticksmirrored = axis.yticksmirrored = false
     axis.xgridvisible = axis.ygridvisible = false
     return axis
@@ -63,12 +63,12 @@ end
     structurestyle!(axis::Axis; scale = false, unit = nothing, ground = false)
 
 2D structure drawing: no axis decorations, transparent background, true data aspect
-(`DataAspect()`). `scale = true` keeps light left + bottom spines with ticks and tick labels
+(`DataAspect()`). `scale = true` keeps black left + bottom spines with outside ticks and tick labels
 as a scale bar; `unit` (e.g. `"m"`) labels it (`[m]`). `ground = true` draws the bottom spine as
 a ground line. Pair with `fitlimits!` / `fitstructure!` so nothing at the edges is clipped.
 """
 function structurestyle!(axis::Axis; scale::Bool = false, unit = nothing, ground::Bool = false,
-    groundcolor = kjl_black, groundwidth = 1.5, scalecolor = kjl_midgray)
+    groundcolor = kjl_black, groundwidth = 1.5, scalecolor = kjl_black)
 
     hidedecorations!(axis)
     hidespines!(axis)

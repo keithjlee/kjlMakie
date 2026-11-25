@@ -24,18 +24,23 @@ savereport("trace.pdf", fig)               # 1 pt per unit: embed at natural siz
 | `kjl_diverging` | red → white → blue | signed fields, with `symmetric_range(v)` |
 | `kjl_neutral`, `kjl_sequential` | orange, white → orange | non-force fields (displacement …), `neutral_colormap(v)` |
 | `kjl_categorical` | blue, green, yellow, grays | several series compared as equals (never red) |
-| internal-force diagrams | black, 50 % fill | one diagram `diagramband!(ax, x, y)`; several: `color = kjl_categorical[i]` |
+| internal-force diagrams | black line, light gray fill `kjl_diagramgray` `#e2e5e9` | one diagram `diagramband!(ax, x, y)`; several: `color = kjl_categorical[i]` (light tint) |
 
 `kjl_red` is the palette red (same as `kjl_pink`).
 
 ## Themes
 
-- `kjl_light`: white/transparent, left + bottom spines, ticks inside, IBM Plex Mono labels and
-  ticks, IBM Plex Sans Bold titles, 9 pt, square axes.
+- `kjl_light`: white/transparent, left + bottom spines, black spines/ticks/tick labels with ticks
+  OUTSIDE, IBM Plex Mono labels and ticks, IBM Plex Sans Bold titles, 9 pt, square axes; colorbars
+  without ticks. Bar charts start exactly at zero: `zerobase!(ax, values)`.
 - `kjl_grid`: very light-gray panel, white gridlines, no ticks.
 - `kjl_dark`: `kjl_light` inverted.
 - `kjl_theme(; style, dark, fontsize, aspect, size)`: variants.
-- Labels in caps: `caps(s)` keeps `[units]`, Greek and `{protected}` text; `capslabels!(fig)`.
+- Labels in caps by Forma's token rule (shared with FormaViz/forma-typst): `caps(s)` uppercases plain
+  words of 3+ letters and listed 2-letter words; units, 1–2 letter symbols (`H`, `k`), inner capitals
+  (`kN`), digits, Greek and markup keep their case. Markup on symbol-shaped tokens renders real
+  sub/superscripts: `"N_{yy} [kN/m]"`, `"M_u"`, `"φM_n"` (`kjl_label`). `capslabels!(fig)` applies it
+  to a whole figure before saving.
 - Legacy: `kjl_light_mono`, `kjl_dark_mono` (old mirrored-tick look).
 
 ## Structure drawings
@@ -47,6 +52,8 @@ savereport("trace.pdf", fig)               # 1 pt per unit: embed at natural siz
   data (nodes and labels at the edges are not clipped) and, for 2D, the figure sized to the
   true aspect.
 - `diagramband!(ax, x, y)`: internal-force diagram, black outline + 50 % fill.
+- The occlusion engine is `src/hiddenline_core.jl` (`hidden_order`): pure Julia, no dependencies,
+  kept IDENTICAL in FormaViz (which adds an SVG drafting-canvas adapter). Change both copies.
 - `hiddenline!(ax, starts, ends; azimuth, elevation, color, linewidth, nodes, halo, ground, width)`:
   3D line structures drawn into a 2D axis with correct occlusion in PDF/SVG (CairoMakie has no
   depth buffer): crossing splits, halos at real crossings, nodes ordered by depth.

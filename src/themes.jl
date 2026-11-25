@@ -5,7 +5,7 @@ Figure units are typographic points: a figure of size `reportsize(…)` embedded
 (save with `savereport`, PDF/SVG at 1 pt per unit) prints its text at the theme's `fontsize`
 (9 pt default).
 
-    kjl_light   white background, left + bottom spines, ticks inside
+    kjl_light   white background, left + bottom spines, black, ticks outside
     kjl_grid    light-gray panel, no ticks, white gridlines (the old `graystyle!` look)
     kjl_dark    kjl_light inverted (slides)
     kjl_theme(; style = :light | :grid, dark = false, fontsize = 9, aspect = 1)   for variants,
@@ -45,7 +45,7 @@ function kjl_theme(; style::Symbol = :light, dark::Bool = false, fontsize::Real 
     fs = fontsize
     tfs = fs - 1                                     # tick labels
     ink = dark ? colorant"#ffffff" : kjl_black
-    soft = dark ? colorant"#bfbfbf" : kjl_darkgray   # tick labels / spines
+    soft = ink                                       # spines, ticks, tick labels: black (Keith 2026-11-24)
     panel = grid ? (dark ? colorant"#2a2a2a" : kjl_panelgray) : :transparent
     gridc = dark ? colorant"#000000" : colorant"#ffffff"
     lw = 0.6                                         # spine / tick width [pt]
@@ -71,7 +71,7 @@ function kjl_theme(; style::Symbol = :light, dark::Bool = false, fontsize::Real 
         leftspinecolor = soft, bottomspinecolor = soft,
         spinewidth = lw,
         xticksvisible = !grid, yticksvisible = !grid,
-        xtickalign = 1, ytickalign = 1,
+        xtickalign = 0, ytickalign = 0,                 # ticks OUTSIDE the spines
         xticksmirrored = false, yticksmirrored = false,
         xticksize = 3, yticksize = 3,
         xtickwidth = lw, ytickwidth = lw,
@@ -131,7 +131,7 @@ function kjl_theme(; style::Symbol = :light, dark::Bool = false, fontsize::Real 
 
         Colorbar = (labelfont = :regular, ticklabelfont = :regular,
             labelsize = fs, ticklabelsize = tfs, ticklabelcolor = soft,
-            ticksvisible = true, tickalign = 1, ticksize = 3, tickwidth = lw, tickcolor = soft,
+            ticksvisible = false,                       # no colorbar ticks (Keith 2026-11-24)
             spinewidth = 0, size = 8, labelpadding = 3,
             colormap = kjl_sequential),
 

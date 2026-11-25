@@ -31,7 +31,7 @@ export kjl_tan
 export kjl_brown
 export kjl_gray
 export kjl_darkgray
-export kjl_black, kjl_midgray, kjl_lightgray, kjl_grays, kjl_panelgray
+export kjl_black, kjl_midgray, kjl_lightgray, kjl_grays, kjl_panelgray, kjl_diagramgray
 
 #colour roles
 export kjl_emphasis
@@ -82,11 +82,15 @@ export tickstoggle!
 export fixlimits!
 export signedband!
 export diagramband!
+export zerobase!
 
 #labels
 include("labels.jl")
 export caps
 export capslabels!
+export kjl_label
+export label_parts
+export CAPS_UNITS, CAPS_WORDS2
 
 #styles
 include("axis_styles.jl")
@@ -102,8 +106,8 @@ export asapstyle!
 include("hiddenline.jl")
 export hiddenline!
 export hiddenface!
-export FaceSet
-export cull_by_faces
+export hidden_order
+export hl_basis, hl_project, hl_cull
 export view_basis
 export project3d
 

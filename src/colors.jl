@@ -13,8 +13,9 @@ the role colormaps (kjl_diverging, kjl_sequential) in figure code, never literal
     compression (−) kjl_red     negative side of any signed quantity
     zero            white       (kjl_diverging = red → white → blue, centred with `symmetric_range`)
     categorical     kjl_categorical  several series compared as equals: blue, green, yellow, grays
-    internal forces ONE diagram (N, V, M): black line, 50 % black fill (`diagramband!`);
-                                several compared: kjl_categorical, same 50 % fill
+    internal forces ONE diagram (N, V, M): black line, light gray fill kjl_diagramgray
+                                (`diagramband!`); several compared: kjl_categorical lines with a
+                                light tint of the same colour
     neutral         kjl_orange  non-force fields mapped to colour (displacement, utilization, …):
                                 kjl_sequential = white → orange, zero = white
 =#
@@ -50,6 +51,9 @@ const kjl_black = colorant"#1a1a1a"
 const kjl_midgray = colorant"#8a8b89"
 const kjl_lightgray = colorant"#c4c5c3"
 const kjl_grays = [kjl_black, kjl_darkgray, kjl_midgray, kjl_lightgray]
+
+# internal-force diagram fill (shared with FormaViz `forma_gray_200`, lighter than #c9ccd1)
+const kjl_diagramgray = colorant"#e2e5e9"
 
 # backgrounds
 const kjl_panelgray = colorant"#fafafa"       # kjl_grid axis background (white gridlines)
